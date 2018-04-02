@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 
 
+
 // The resolvers
 const resolvers = {
   Query: {
@@ -52,14 +53,15 @@ const resolvers = {
       if (!user) {
         throw new Error('Not user with that email')
       }
-
       const valid = await bcrypt.compare(password, user.password);
       if (!valid) {
         throw new Error('Incorrent password')
       }
-
-      var token = jwt.sign({ user: _.pick(user, ['id', 'username']), }, SECRET, { expiresIn: 60 * 60 });
-
+      var token = jwt.sign(
+        { user: _.pick(user, ['id', 'username']) }, 
+        SECRET,
+        { expiresIn: 60 * 60 }
+      );
       return token;
     },
     /**

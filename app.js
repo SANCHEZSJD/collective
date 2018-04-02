@@ -38,12 +38,11 @@ const SECRET = 'jnscjiasd79812ensca8auscj21e89du';
 
 var app = express();
 
-const addUser = async (req) => {
+const authMiddleware = async (req) => {
   const token = req.headers.authorization;
   try {
     const { user } = await jwt.verify(token, SECRET);
     req.user = user;
-
   } catch (error) {
     console.log(error);
   }
@@ -60,7 +59,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(addUser);
+app.use(authMiddleware);
 
 
 app.use('/', indexRouter);

@@ -3,7 +3,9 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var jwt = require('jsonwebtoken');
+const jwt = require('express-jwt');
+const jwtDecode = require('jwt-decode');
+
 /**
  * 
  * Graph ql
@@ -34,20 +36,17 @@ mongoose.connect('mongodb://127.0.0.1:27017/collective')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
-const SECRET = 'jnscjiasd79812ensca8auscj21e89du';
+/**
+ * auth
+ */
+const jwtMiddleware = jwt({ secret: '09121993jdss12061993mjcr' });
+const getUserFromJwt = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  req.user = jwtDecode(authHeader);
+  next();
+}
 
 var app = express();
-
-const authMiddleware = async (req) => {
-  const token = req.headers.authorization;
-  try {
-    const { user } = await jwt.verify(token, SECRET);
-    req.user = user;
-  } catch (error) {
-    console.log(error);
-  }
-  req.next();
-}
 
 // view engine setup
 
@@ -59,18 +58,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(authMiddleware);
+app.use(jwtMiddleware);
+app.use(getUserFromJwt);
 
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 // The GraphQL endpoint
 app.use('/graphql', express.json(), graphqlExpress(req => ({
-  schema,
-  context: {
-    SECRET,
-    user: req.user,
-  }
+  schema
 })));
 // GraphiQL, a visual editor for queries
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));

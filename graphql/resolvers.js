@@ -7,12 +7,19 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 
+const checkScopeAndResolver = (scope, expectedScope, controller) => {
+  const hasScope = scope.incudes(expectedScope);
+  if(!expectedScope.lenght || hasScope){
+    return controller.apply(this);
+  }
+}
+
 
 
 // The resolvers
 const resolvers = {
   Query: {
-    me: (root, args, { user }) => {
+    me: (root, args, context) => {
       if (user) {
         return User.findById({ _id: user.id });
       }

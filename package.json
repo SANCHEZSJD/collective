@@ -1,0 +1,26 @@
+{
+  "name": "collectiveservice",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "apollo-server-express": "^1.3.4",
+    "bcrypt": "^1.0.3",
+    "bluebird": "^3.5.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "ejs": "~2.5.7",
+    "express": "~4.16.0",
+    "graphql": "^0.13.2",
+    "graphql-tools": "^2.23.1",
+    "http-errors": "~1.6.2",
+    "jsonwebtoken": "^8.2.0",
+    "lodash": "^4.17.5",
+    "mongoose": "^5.0.12",
+    "mongoose-paginate": "^5.0.3",
+    "morgan": "~1.9.0",
+    "nodemon": "^1.17.3"
+  }
+}
